@@ -13,7 +13,7 @@ exports.About = async function (req, res) {
 
 exports.Contact = async function (req, res) {
   let reqInfo = RequestService.reqHelper(req);
-  res.render("cotact", { 
+  res.render("contact", { 
     reqInfo: reqInfo,  
     title: "contact",
     status: null })

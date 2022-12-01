@@ -4,6 +4,12 @@ class UserOps {
   // Constructor
   UserOps() {}
 
+  async getAllStudents() {
+    console.log("getting all students");
+    let students = await Students.find().sort({ name: 1 });
+    return students;
+  }
+
   async getUserByEmail(email) {
     let user = await User.findOne({ email: email });
     if (user) {

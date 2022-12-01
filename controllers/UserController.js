@@ -2,6 +2,13 @@ const User = require("../models/User");
 const passport = require("passport");
 const RequestService = require("../services/RequestService");
 
+exports.Index = async function (req, res) {
+  let reqInfo = RequestService.reqHelper(req);
+  res.render("students", { reqInfo: reqInfo, title: "Students"} );
+};
+
+
+
 // Displays registration form.
 exports.Register = async function (req, res) {
   let reqInfo = RequestService.reqHelper(req);

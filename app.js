@@ -67,7 +67,7 @@ app.use(indexRouter);
 
 // User routes
 const userRouter = require("./routers/userRouter");
-app.use("/user", userRouter);
+app.use("/students", userRouter);
 
 // Secure routes
 const secureRouter = require("./routers/secureRouter");

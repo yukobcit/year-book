@@ -3,6 +3,8 @@ const userRouter = express.Router();
 
 const UserController = require("../controllers/UserController");
 
+userRouter.get("/students", UserController.Index);
+
 userRouter.get("/register", UserController.Register);
 userRouter.post("/register", UserController.RegisterUser);
 

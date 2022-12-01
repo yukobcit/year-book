@@ -60,3 +60,22 @@ exports.RegisterUser = async function (req, res) {
     });
   }
 };
+
+exports.Logout = (req, res) => {
+  // Use Passports logout function
+  req.logout((err) => {
+    if (err) {
+      console.log("logout error");
+      return next(err);
+    } else {
+      // logged out.  Update the reqInfo and redirect to the login page
+      let reqInfo = RequestService.reqHelper(req);
+      res.render("user/login", {
+        user: {},
+        isLoggedIn: false,
+        errorMessage: "",
+        reqInfo: reqInfo,
+      });
+    }
+  });
+};

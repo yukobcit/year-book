@@ -79,3 +79,22 @@ exports.Logout = (req, res) => {
     }
   });
 };
+
+// Shows login form.
+exports.Login = async function (req, res) {
+  let reqInfo = RequestService.reqHelper(req);
+  let errorMessage = req.query.errorMessage;
+  res.render("user/login", {
+    user: {},
+    errorMessage: errorMessage,
+    reqInfo: reqInfo,
+  });
+};
+// Receives login information & redirects
+// depending on pass or fail.
+exports.LoginUser = (req, res, next) => {
+  passport.authenticate("local", {
+    successRedirect: "/secure/secure-area",
+    failureRedirect: "/user/login?errorMessage=Invalid login.",
+  })(req, res, next);
+};

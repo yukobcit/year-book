@@ -6,7 +6,7 @@ exports.Index = async function (req, res) {
 };
 
 // Handle profile form GET request
-exports.Create = async function (request, response) {
+exports.About = async function (request, response) {
   response.render("about", { title: "about" })
 };
 

@@ -15,6 +15,7 @@ else{
   profiles = await _profileOps.getAllProfiles();
 }
 
+
   if (profiles) {
     response.render("profiles", {
       title: "Express Yourself - Profiles",

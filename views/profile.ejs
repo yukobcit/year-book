@@ -1,15 +1,20 @@
 <h1>
     My Profile
-    </h1>
+</h1>
     
     Username: <%= student.user.username %><br/>
     Name: <%= student.user.firstName %> <%= student.user.lastName %><br/>
     Email: <%= student.user.email %><br/>
+    Image Path: <%= student.user.imagePath %><br/>
+    <% if(student.user.imagePath) { %>
+        <img src="<%= student.user.imagePath %>" alt="<%= student.user.firstName %>" height = 300px />
+      <% } %>
+
+
     
     <% if(reqInfo.roles?.length) { %>
     Roles: <%= reqInfo.roles %>
 
-
-
     <% } %>
-    <a href="/user/edit/<%= student.user.username %>"><button>Edit</button>
+
+    <a href="/user/edit/<%= student.user.username %>"> <button>Edit</button></a>

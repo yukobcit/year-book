@@ -284,14 +284,16 @@ exports.EditStudent = async function (req, res) {
 
   if (responseObj.errorMsg == "") {
     let students = await _userOps.getAllStudents();
-    console.log(responseObj.obj)
+   
     res.render("profile", {
-      title: "Express Yourself - " + responseObj.user.firstname,
+      title: "Year Book  -  " + responseObj.user.firstName,
       students: students,
       student: responseObj,
       username: responseObj.user.username,
-      layout: "./layouts/side-bar",
+
+
       reqInfo: reqInfo,
+      layout: "./layouts/side-bar",
     });
   }
 

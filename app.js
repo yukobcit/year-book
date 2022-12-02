@@ -1,5 +1,6 @@
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
+const fileupload = require("express-fileupload");
 
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -25,10 +26,9 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 // Set up our server
 const app = express();
+app.use(fileupload());
 
-// Parse form data and JSON
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Set up session management
@@ -67,7 +67,7 @@ app.use(indexRouter);
 
 // User routes
 const userRouter = require("./routers/userRouter");
-app.use("/students", userRouter);
+app.use("/user", userRouter);
 
 // Secure routes
 const secureRouter = require("./routers/secureRouter");

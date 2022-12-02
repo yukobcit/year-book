@@ -1,0 +1,15 @@
+<h1>
+    My Profile
+    </h1>
+    
+    Username: <%= student.user.username %><br/>
+    Name: <%= student.user.firstName %> <%= student.user.lastName %><br/>
+    Email: <%= student.user.email %><br/>
+    
+    <% if(reqInfo.roles?.length) { %>
+    Roles: <%= reqInfo.roles %>
+
+
+
+    <% } %>
+    <a href="/user/edit/<%= student.user.username %>"><button>Edit</button>

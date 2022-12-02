@@ -1,0 +1,24 @@
+/* The sidebar menu */
+.sidenav {
+    height: 100%;
+    width: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding-top: 40px;
+    }
+    
+    /* The navigation menu links */
+    .sidenav a {
+      color: #818181;
+      display: block;
+    }
+    
+    img{
+      height: 200px;
+    }
+    
+    ul {
+      list-style-type: none;
+    }
+  

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../styles/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Year Book</title>
+</head>
+<body>
+        <%- include('../partials/header.ejs') %>
+        <main><%- body %></main>
+        <div class="sidenav">
+            <aside>
+                Students
+            <ul>
+                <% for (let i = 0; i < students.length; i++) { %>
+                    <%if(students[i].id != student.id) {%>
+                        <li><a href="<%= students[i].username%>"><%= students[i].firstName + " " + students[i].lastName%></a></li>
+                    <% } %>
+                <% } %>
+            </ul>
+        </aside>
+        </div>
+        <%- include('../partials/footer.ejs') %>
+</body>
+</html>

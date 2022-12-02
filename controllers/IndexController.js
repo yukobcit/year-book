@@ -1,6 +1,7 @@
 const RequestService = require("../services/RequestService");
 
 exports.Index = async function (req, res) {
+  console.log("Index-controller")
   let reqInfo = RequestService.reqHelper(req);
   res.render("index", { reqInfo: reqInfo, title: "Home"} );
 };

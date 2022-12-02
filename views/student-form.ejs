@@ -1,0 +1,22 @@
+<h3> Edit Student Info</h3>
+
+<form action="/user/edit<%= username ? "/"+username : "" %>" method="POST" enctype="multipart/form-data" >   
+    <input type="hidden" id="student_username" name="student_username" value="<%= username %>">
+    <label for="name">First Name:</label>
+    <input id="fname" name="fname" type="text" 
+                value="<%= student.user.firstName ? student.user.firstName : '' %>" >
+             
+    <label for="name">Last Name:</label>
+    <input id="lname" name="lname" type="text" 
+               value="<%= student.user.lastName ? student.user.lastName : '' %>" >
+
+    <label for="interests">Interests(input with comma please):</label>
+    <input id="interests" name="interests" type="text" 
+                value="<%= student.user.interests ? student.user.interests : '' %>" >
+    <input id="photo" name="photo" type="file">
+  
+    <button type="submit" value="Submit">Submit</button>
+</form>
+
+
+<%= errorMessage %>

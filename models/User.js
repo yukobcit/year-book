@@ -20,6 +20,11 @@ const userSchema = mongoose.Schema({
   lastName: {
     type: String,
   },
+  interests: Array,
+  imagePath: { type: "String", required: false },
+  roles: {
+    type: Array,
+  },
 });
 
 userSchema.plugin(passportLocalmongoose);

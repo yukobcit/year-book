@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="/styles/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Year Book</title>
 </head>
@@ -15,8 +15,8 @@
                 Students TEST
             <ul>
                 <% for (let i = 0; i < students.length; i++) { %>
-                    <%if(students[i].id != student.id) {%>
-                        <li><a href="<%= students[i].username%>"><%= students[i].firstName + " " + students[i].lastName%></a></li>
+                    <%if(students[i].id != student.user.id) {%>
+                        <li><a href="/year-book/<%= students[i].username%>"><%= students[i].firstName + " " + students[i].lastName%></a></li>
                     <% } %>
                 <% } %>
             </ul>

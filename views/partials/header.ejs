@@ -5,24 +5,15 @@
         <a href="/about">About</a> 
         
         <%if (reqInfo.authenticated) { %>
-        <a href="/profile"> | Year Book</a>
-        <a href='/user/logout'>Logout</a> [<%= reqInfo.username %>]
-  
-
-
-        <% if (reqInfo.roles.includes("Admin")) { %>
-          <a href='/user/admin-area'>Admin Area</a> | 
-        <% } %>
-
-        <% if (reqInfo.roles.includes("Admin") || reqInfo.roles.includes("Manager")) { %>
-          <a href='/user/manager-area'>Manager Area</a> | 
-        <% } %>
+            <a href="/year-book"> | Year Book</a>
+            <a href='/logout'>Logout</a>          
+                <% if(reqInfo.roles?.length) { %>
+                        [<%= reqInfo.username %> -- <%= reqInfo.roles %>] 
+                <% } else { %>
+                        [<%= reqInfo.username %>]<% } %>
         <% } else { %>
-                    <a href='/user/login'> | Login</a> | 
-                    <a href='/user/register'>Register</a> 
-                    <%}%> 
-          <!-- 'else' must be in separate section with curly brackets to work. -->
-        </nav>
-
-
+            <a href='/login'> | Login</a> | 
+            <a href='/register'>Register</a> 
+        <%}%>
+    </nav>
   </header>

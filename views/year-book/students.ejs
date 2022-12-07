@@ -1,0 +1,21 @@
+<h1>Students</h1>
+
+<form class="searchStudents" action="year-book">
+  <input type="text" placeholder="Search.." name="searchStudents">
+  <button type="submit">Search<i class="searchStudentsBtn"></i></button>
+</form>
+<br>
+
+<div>
+<ul>
+  <% for (let i = 0; i < students.length; i++ ) {%>
+  <li>
+    <a href="/year-book/<%= students[i].username %>"><%= students[i].firstName %></a> 
+    <% if( reqInfo.roles.includes("Admin"))  { %>
+    <a href="/year-book/delete/<%= students[i].username %>"><button>Delete</button></a>
+    <% } %>
+  </li>
+  <% } %>
+</ul>
+</div>
+

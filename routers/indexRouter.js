@@ -3,10 +3,17 @@ const indexRouter = express.Router();
 
 const IndexController = require("../controllers/IndexController");
 
-console.log("index router")
-
 indexRouter.get("/", IndexController.Index);
 indexRouter.get("/about", IndexController.About);
 indexRouter.get("/contact", IndexController.Contact);
+
+indexRouter.get("/register", IndexController.Register);
+indexRouter.post("/register", IndexController.RegisterUser);
+
+indexRouter.get("/login", IndexController.Login);
+indexRouter.post("/login", IndexController.LoginUser);
+
+indexRouter.get("/logout", IndexController.Logout);
+
 
 module.exports = indexRouter;

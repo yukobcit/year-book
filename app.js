@@ -1,6 +1,9 @@
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const fileupload = require("express-fileupload");
+// const cookieParser = require('cookie-parser');
+//const RequestService = require("../services/RequestService");
+const RequestService = require("./services/RequestService")
 
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -31,12 +34,26 @@ app.use(fileupload());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+const store = new MongoDBStore({
+  uri: uri,
+  collection: "sessions",
+});
+
+store.on("error",function(error){
+  console.log(error);
+}
+);
+
 // Set up session management
 app.use(
   require("express-session")({
     secret: "a long time ago in a galaxy far far away",
-    resave: false,
+    resave: true,
     saveUninitialized: false,
+    store: store,
+    cookie: { maxAge: 1000*60*20 },
   })
 );
 
@@ -65,13 +82,24 @@ app.use(express.static("public"));
 const indexRouter = require("./routers/indexRouter");
 app.use(indexRouter);
 
-// User routes
-const userRouter = require("./routers/userRouter");
-app.use("/user", userRouter);
+const AuthUser = function (req, res, next) {
+  let reqInfo = RequestService.reqHelper(req);
+  if (reqInfo.authenticated) {
+    next();
+  } else {
+    res.redirect(
+      "/login?errorMessage=You must be logged in to view this page."
+    );
+  }
+};
 
-// Secure routes
-const secureRouter = require("./routers/secureRouter");
-app.use("/secure", secureRouter);
+app.use(AuthUser)
+
+// User routes
+const yearBookRouter = require("./routers/yearBookRouter");
+app.use("/year-book", yearBookRouter);
+
+
 
 // Start listening
 const port = process.env.PORT || 3003;

@@ -1,7 +1,7 @@
 <h3> Edit Student Info</h3>
 
-<form action="/year-book/edit<%= username ? "/"+username : "" %>" method="POST" enctype="multipart/form-data" >   
-    <input type="hidden" id="student_username" name="student_username" value="<%= username %>">
+<form action="/year-book/edit<%= id ? "/"+id : "" %>" method="POST" enctype="multipart/form-data" >   
+    <input type="hidden" id="student_id" name="student_id" value="<%= id %>">
     <label for="name">First Name:</label>
     <input id="fname" name="fname" type="text" 
                 value="<%= student.user.firstName ? student.user.firstName : '' %>" >

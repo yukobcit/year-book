@@ -4,8 +4,6 @@ const indexRouter = express.Router();
 const IndexController = require("../controllers/IndexController");
 
 indexRouter.get("/", IndexController.Index);
-indexRouter.get("/about", IndexController.About);
-indexRouter.get("/contact", IndexController.Contact);
 
 indexRouter.get("/register", IndexController.Register);
 indexRouter.post("/register", IndexController.RegisterUser);

@@ -40,7 +40,8 @@ exports.Profile = async function (req, res) {
     sessionData.roles = roles;
     reqInfo.roles = roles;
     
-    let userInfo = await _userOps.getUserByUsername(reqInfo.username);
+    // let userInfo = await _userOps.getUserByUsername(reqInfo.username);
+    let userInfo = await _userOps.getStudentById(reqInfo.id);
     // get user by....
     students = await _userOps.getAllStudents();
     // console.log(students)
@@ -95,14 +96,15 @@ exports.ManagerArea = async function (req, res) {
 };
 
 exports.Detail = async function (req, res) {
-  const username = req.params.id;
-  console.log("year-book/username"+ username)
+  const id = req.params.id;
+  console.log("year-book/username"+ id)
   let reqInfo = RequestService.reqHelper(req);
 
   if (reqInfo.authenticated) {
 
-    let userInfo = await _userOps.getUserByUsername(username);
-    // get user by....
+    // let userInfo = await _userOps.getUserByUsername(username);
+    let userInfo = await _userOps.getStudentById(id);
+    // get user by...
     students = await _userOps.getAllStudents();
 
     if (userInfo) {
@@ -111,7 +113,7 @@ exports.Detail = async function (req, res) {
         student: userInfo,
         students: students,
         reqInfo: reqInfo,
-        username: username,
+        username: userInfo.username,
         layout: "./layouts/side-bar",
       });
     } else {
@@ -132,9 +134,9 @@ exports.Detail = async function (req, res) {
 };
 
 exports.Edit = async function (req, res) {
-  const username = req.params.id;
+  const id = req.params.id;
   let reqInfo = RequestService.reqHelper(req);
-  let userInfo = await _userOps.getUserByUsername(username);
+  let userInfo = await _userOps.getStudentById(id);
   let roles = await _userOps.getRolesByUsername(reqInfo.username);
   let managerCheck = '';
   let adminCheck = '';
@@ -146,11 +148,12 @@ exports.Edit = async function (req, res) {
     adminCheck = "checked";
   }
 
-  if (reqInfo.username == username || roles.includes("Manager") || roles.includes("Admin")){
+  if (reqInfo.id == id || roles.includes("Manager") || roles.includes("Admin")){
     res.render("year-book/student-form", {
       title: "Edit Student Info",
       errorMessage: "",
-      username: username,
+      // username: username,
+      id : id,
       student: userInfo,
       reqInfo: reqInfo,
       managerCheck: managerCheck,
@@ -158,7 +161,7 @@ exports.Edit = async function (req, res) {
     });
   }else{
     console.log("Error, not autherized to edit")
-    let userInfo = await _userOps.getUserByUsername(username);
+    let userInfo = await _userOps.getStudentById(id);
     students = await _userOps.getAllStudents();
 
     if (userInfo) {
@@ -167,7 +170,8 @@ exports.Edit = async function (req, res) {
         student: userInfo,
         students: students,
         reqInfo: reqInfo,
-        username: username,
+        // username: username,
+        id : id,
         layout: "./layouts/side-bar",
       });
     }
@@ -175,7 +179,7 @@ exports.Edit = async function (req, res) {
 }
 
 exports.EditStudent = async function (req, res) {
-  const username = req.body.student_username;
+  const id = req.body.student_id;
   const firstName = req.body.fname;
   const lastName = req.body.lname;
   const email = req.body.email;
@@ -194,7 +198,7 @@ exports.EditStudent = async function (req, res) {
     path = "/images/"+req.files.photo.name
   }
   let studentInterests = req.body.interests.split(",")
-  let responseObj = await _userOps.updateStudentByUsername(username, firstName,lastName,studentInterests,path,email,roles);
+  let responseObj = await _userOps.updateStudentById(id, firstName,lastName,studentInterests,path,email,roles);
 
   if (responseObj.errorMsg == "") {
     let students = await _userOps.getAllStudents();
@@ -205,6 +209,7 @@ exports.EditStudent = async function (req, res) {
       students: students,
       reqInfo: reqInfo,
       username: responseObj.user.username,
+      
       layout: "./layouts/side-bar",
     });
   }

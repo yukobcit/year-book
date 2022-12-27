@@ -6,18 +6,8 @@ class UserOps {
 
   async getAllStudents() {
     console.log("getting all students");
-    let students = await User.find().sort({ name: 1 });
+    let students = await User.find().sort({ lastName: 1 });
     return students;
-  }
-
-  async getUserByEmail(email) {
-    let user = await User.findOne({ email: email });
-    if (user) {
-      const response = { obj: user, errorMessage: "" };
-      return response;
-    } else {
-      return null;
-    }
   }
 
   async getUserByUsername(username) {
@@ -33,9 +23,9 @@ class UserOps {
     }
   }
 
-  async getStudentById(_id) {
+  async getStudentById(id) {
     let user = await User.findOne(
-      { _id: _id },
+      { _id: id },
       { _id: 1, username: 1, email: 1, firstName: 1, lastName: 1, interests: 1, imagePath: 1, comments: 1, roles: 1 }
     );
     if (user) {
@@ -46,15 +36,7 @@ class UserOps {
     }
   }
 
-//   async getUserByUsername(username) {
-//     let user = await User.findOne({ username: username });
-//     if (user) {
-//       const response = { obj: user, errorMessage: "" };
-//       return response;
-//     } else {
-//       return null;
-//     }
-//   }
+
 async getRolesByUsername(username) {
   let user = await User.findOne({ username: username }, { _id: 0, roles: 1 });
   if (user.roles) {
@@ -63,9 +45,9 @@ async getRolesByUsername(username) {
     return [];
   }
 }
-async updateStudentByUsername(username, firstName, lastName, studentInterests,path,email,roles) {
+async updateStudentById(id, firstName, lastName, studentInterests,path,email,roles) {
  
-  const student = await User.findByUsername(username);
+  const student = await User.findById(id);
 
   student.firstName = firstName;
   student.lastName = lastName;
@@ -104,20 +86,6 @@ async updateStudentCommentByUsername(comment, username) {
     return students;
   }
 
-  async addCommentToUser(comment, username) {
-    let user = await User.findOne({ username: username });
-    user.comments.push(comment);
-    try {
-      let result = await user.save();
-      console.log("updated user: ", result);
-      const response = { user: result, errorMessage: "" };
-      return response;
-    } catch (error) {
-      console.log("error saving user: ", result);
-      const response = { user: user, errorMessage: error };
-      return response;
-    }
-   }
 
    async deleteProfileById(id) {
     console.log(`deleting student by id`);

@@ -38,7 +38,7 @@
 
 </br>
     <% if(student.user.username == reqInfo.username || reqInfo.roles.includes("Admin") || reqInfo.roles.includes("Manager"))  { %>
-    <a href="/year-book/edit/<%= student.user.username %>"> <button>Edit</button></a>
+    <a href="/year-book/edit/<%= student.user.id %>"> <button>Edit</button></a>
     <% } %>
 
     <% if( reqInfo.roles.includes("Admin"))  { %>

@@ -8,20 +8,6 @@ exports.Index = async function (req, res) {
   res.render("index", { reqInfo: reqInfo, title: "Home"} );
 };
 
-// Handle profile form GET request
-exports.About = async function (req, res) {
-  let reqInfo = RequestService.reqHelper(req);
-  res.render("about", { reqInfo: reqInfo,  title: "About" })
-};
-
-exports.Contact = async function (req, res) {
-  let reqInfo = RequestService.reqHelper(req);
-  res.render("contact", { 
-    reqInfo: reqInfo,  
-    title: "Contact",
-    status: null })
-};
-
 // Displays registration form.
 exports.Register = async function (req, res) {
   let reqInfo = RequestService.reqHelper(req);

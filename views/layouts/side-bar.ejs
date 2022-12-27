@@ -9,19 +9,22 @@
 </head>
 <body>
         <%- include('../partials/header.ejs') %>
+    <aside>
         <main><%- body %></main>
         <div class="sidenav">
-            <aside>
+
                 Students...
             <ul>
                 <% for (let i = 0; i < students.length; i++) { %>
                     <%if(students[i].id != student.user.id) {%>
-                        <li><a href="/year-book/<%= students[i].username%>"><%= students[i].firstName + " " + students[i].lastName%></a></li>
+                        <li><a href="/year-book/<%= students[i].id%>"><%= students[i].firstName + " " + students[i].lastName%></a></li>
                     <% } %>
                 <% } %>
             </ul>
-        </aside>
+
         </div>
+    </aside>
         <%- include('../partials/footer.ejs') %>
+
 </body>
 </html>

@@ -10,9 +10,9 @@
 <ul>
   <% for (let i = 0; i < students.length; i++ ) {%>
   <li>
-    <a href="/year-book/<%= students[i].username %>"><%= students[i].firstName %></a> 
+    <a href="/year-book/<%= students[i].id %>"><%= students[i].firstName %> <%= students[i].lastName %></a> 
     <% if( reqInfo.roles.includes("Admin"))  { %>
-    <a href="/year-book/delete/<%= students[i].username %>"><button>Delete</button></a>
+    <a href="/year-book/delete/<%= students[i].id %>"><button>Delete</button></a>
     <% } %>
   </li>
   <% } %>

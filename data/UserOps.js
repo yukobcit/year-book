@@ -81,11 +81,11 @@ async updateStudentCommentByUsername(comment, username) {
 }
 
   async searchStudents(string) {
-    const filter = {firstName: {$regex: string, $options: "i"}};
-    let students = await User.find(filter).sort({ firstName: 1 });
+    const firstNameFilter = {firstName: {$regex: string, $options: "i"}};
+    const lastNameFilter = {lastName: {$regex: string, $options: "i"}};
+    let students = await User.find({$or: [firstNameFilter,lastNameFilter]}).sort({ lastName: 1 });
     return students;
   }
-
 
    async deleteProfileById(id) {
     console.log(`deleting student by id`);

@@ -16,7 +16,6 @@ if(req.query.searchStudents){
 else{
   students = await _userOps.getAllStudents();
 }
-console.log(reqInfo);
   if (students) {
     res.render("year-book/students", {
       title: "Year Book - Students ",
@@ -40,10 +39,8 @@ exports.Profile = async function (req, res) {
     let sessionData = req.session;
     sessionData.roles = roles;
     reqInfo.roles = roles;
+    
     let userInfo = await _userOps.getUserByUsername(reqInfo.username);
-
-    console.log(userInfo.user);
-    console.log(reqInfo);
     // get user by....
     students = await _userOps.getAllStudents();
     // console.log(students)
@@ -101,7 +98,7 @@ exports.Detail = async function (req, res) {
   const username = req.params.id;
   console.log("year-book/username"+ username)
   let reqInfo = RequestService.reqHelper(req);
-  console.log(reqInfo);
+
   if (reqInfo.authenticated) {
 
     let userInfo = await _userOps.getUserByUsername(username);
@@ -139,6 +136,15 @@ exports.Edit = async function (req, res) {
   let reqInfo = RequestService.reqHelper(req);
   let userInfo = await _userOps.getUserByUsername(username);
   let roles = await _userOps.getRolesByUsername(reqInfo.username);
+  let managerCheck = '';
+  let adminCheck = '';
+
+  if( userInfo.user.roles.includes("Manager")) {
+    managerCheck = "checked";
+  }
+  if( userInfo.user.roles.includes("Admin")) {
+    adminCheck = "checked";
+  }
 
   if (reqInfo.username == username || roles.includes("Manager") || roles.includes("Admin")){
     res.render("year-book/student-form", {
@@ -147,6 +153,8 @@ exports.Edit = async function (req, res) {
       username: username,
       student: userInfo,
       reqInfo: reqInfo,
+      managerCheck: managerCheck,
+      adminCheck: adminCheck
     });
   }else{
     console.log("Error, not autherized to edit")
@@ -171,10 +179,13 @@ exports.EditStudent = async function (req, res) {
   const firstName = req.body.fname;
   const lastName = req.body.lname;
   const email = req.body.email;
+  const roles = [req.body.manager,req.body.admin];
   let reqInfo = RequestService.reqHelper(req);
 
+
   let path = "";
-  console.log(req.body);
+  console.log("req")
+
 
   if(req.files != null)
   {
@@ -183,11 +194,11 @@ exports.EditStudent = async function (req, res) {
     path = "/images/"+req.files.photo.name
   }
   let studentInterests = req.body.interests.split(",")
-  let responseObj = await _userOps.updateStudentByUsername(username, firstName,lastName,studentInterests,path,email);
+  let responseObj = await _userOps.updateStudentByUsername(username, firstName,lastName,studentInterests,path,email,roles);
 
   if (responseObj.errorMsg == "") {
     let students = await _userOps.getAllStudents();
-   
+
     res.render("year-book/profile", {
       title: "Year Book - Students",
       student: responseObj,
@@ -253,11 +264,12 @@ exports.CommentStudent = async function (req, res) {
   
   let reqInfo = RequestService.reqHelper(req);
   const username = req.body.student_username;
+  let authorInfo = await _userOps.getUserByUsername(reqInfo.username,);
 
   console.log("Saving a comment for ", username);
   const comment = {
     commentBody: req.body.comment,
-    commentAuthor: reqInfo.username,
+    commentAuthor: authorInfo.user.firstName
   };
   let responseObj = await _userOps.updateStudentCommentByUsername(
     comment,

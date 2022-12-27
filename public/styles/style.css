@@ -80,15 +80,17 @@ input, select {
 }
 
 body header div{
-  background-color: #FD8A8A;
+
   font-size: 2em;
+  margin-top:20px;
+  margin-bottom: 20px;
 }
 
 main{
   margin-top: 70px; 
   margin-bottom: 70px;
   width: 80%;
-  text-align: center;
+
 }
 nav{
   border-bottom: 5px solid #ccc;
@@ -96,7 +98,7 @@ nav{
   }
   nav ul{
   position: absolute;
-  left:10%;
+  left:0%;
   display: table;
   margin: 0 auto;
   padding: 0;

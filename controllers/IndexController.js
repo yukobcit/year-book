@@ -1,5 +1,6 @@
 const RequestService = require("../services/RequestService");
 const passport = require("passport");
+const User = require("../models/User");
 
 exports.Index = async function (req, res) {
   console.log("Index-controller")
@@ -10,14 +11,14 @@ exports.Index = async function (req, res) {
 // Handle profile form GET request
 exports.About = async function (req, res) {
   let reqInfo = RequestService.reqHelper(req);
-  res.render("about", { reqInfo: reqInfo,  title: "about" })
+  res.render("about", { reqInfo: reqInfo,  title: "About" })
 };
 
 exports.Contact = async function (req, res) {
   let reqInfo = RequestService.reqHelper(req);
   res.render("contact", { 
     reqInfo: reqInfo,  
-    title: "contact",
+    title: "Contact",
     status: null })
 };
 
@@ -28,13 +29,15 @@ exports.Register = async function (req, res) {
     errorMessage: "", 
     user: {}, 
     reqInfo: reqInfo,
-    title: "Year Book - Register", });
+    title: "Register", });
 };
 
 // Handles 'POST' with registration form submission.
 exports.RegisterUser = async function (req, res) {
   const password = req.body.password;
   const passwordConfirm = req.body.passwordConfirm;
+  console.log(req.body)
+
 
   if (password == passwordConfirm) {
     // Creates user object with mongoose model.
@@ -46,6 +49,7 @@ exports.RegisterUser = async function (req, res) {
       username: req.body.username,
     });
 
+    console.log(User);
     // Uses passport to register the user.
     // Pass in user object without password
     // and password as next parameter.
@@ -56,17 +60,17 @@ exports.RegisterUser = async function (req, res) {
         // Show registration form with errors if fail.
         if (err) {
           let reqInfo = RequestService.reqHelper(req);
-          return res.render("user/register", {
+          return res.render("register", {
             user: newUser,
             errorMessage: err,
             reqInfo: reqInfo,
-            title: "Year Book - Register"
+            title: "Register"
           });
         }
         // User registered so authenticate and redirect to secure
         // area.
         passport.authenticate("local")(req, res, function () {
-          res.redirect("/user");
+          res.redirect("/year-book/profile");
         });
       }
     );
@@ -78,9 +82,9 @@ exports.RegisterUser = async function (req, res) {
         lastName: req.body.lastName,
         email: req.body.email,
         username: req.body.username,
-        title: "Year Book - Register "
+        title: "Register "
       },
-      errorMessage: "Passwords do not match.",
+      errorMessage: "Passwords does not match.",
       reqInfo: reqInfo,
     });
   }
@@ -100,7 +104,7 @@ exports.Logout = (req, res) => {
         isLoggedIn: false,
         errorMessage: "",
         reqInfo: reqInfo,
-        title: "Year Book - Log out"
+        title: "Logout"
       });
     }
   });
@@ -114,7 +118,7 @@ exports.Login = async function (req, res) {
     user: {},
     errorMessage: errorMessage,
     reqInfo: reqInfo,
-    title: "Year Book - Log in"
+    title: "Login"
   });
 };
 

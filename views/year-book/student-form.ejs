@@ -19,10 +19,15 @@
                 value="<%= student.user.interests ? student.user.interests : '' %>" >
     <br>
     <input id="photo" name="photo" type="file">
-  
-    <input type="checkbox" id="manager" name="manager" value="Manager">
-    <label for="manager">Make as a manager</label><br>
+    <br>
+    <br>
+   <% if(reqInfo.roles.includes("Admin") || reqInfo.roles.includes("Manager"))  { %>
+         <input type="checkbox" id="manager" name="manager" value="Manager"  <%= managerCheck%>>
+         <label for="manager">Manager</label><br>
 
+         <input type="checkbox" id="admin" name="admin" value="Admin" <%= adminCheck%>>
+         <label for="admin">Admin</label><br>
+    <% } %>
     <button type="submit" value="Submit">Submit</button>
 </form>
 

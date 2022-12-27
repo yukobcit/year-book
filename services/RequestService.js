@@ -22,8 +22,10 @@ class RequestService {
       return {
         authenticated: true,
         username: req.user.username,
-        roles: req.session.roles,
+        // roles: req.session.roles,
+        roles: req.user.roles,
         rolePermitted: rolePermitted,
+        id: req.user.id,
       };
     }
     // Send logged out status to form if not authenticated.

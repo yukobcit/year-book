@@ -23,7 +23,20 @@ class UserOps {
   async getUserByUsername(username) {
     let user = await User.findOne(
       { username: username },
-      { _id: 1, username: 1, email: 1, firstName: 1, lastName: 1, interests: 1, imagePath: 1, comments: 1 }
+      { _id: 1, username: 1, email: 1, firstName: 1, lastName: 1, interests: 1, imagePath: 1, comments: 1, roles: 1 }
+    );
+    if (user) {
+      const response = { user: user, errorMessage: "" };
+      return response;
+    } else {
+      return null;
+    }
+  }
+
+  async getStudentById(_id) {
+    let user = await User.findOne(
+      { _id: _id },
+      { _id: 1, username: 1, email: 1, firstName: 1, lastName: 1, interests: 1, imagePath: 1, comments: 1, roles: 1 }
     );
     if (user) {
       const response = { user: user, errorMessage: "" };
@@ -50,7 +63,7 @@ async getRolesByUsername(username) {
     return [];
   }
 }
-async updateStudentByUsername(username, firstName, lastName, studentInterests,path,email) {
+async updateStudentByUsername(username, firstName, lastName, studentInterests,path,email,roles) {
  
   const student = await User.findByUsername(username);
 
@@ -59,6 +72,7 @@ async updateStudentByUsername(username, firstName, lastName, studentInterests,pa
   student.interests = studentInterests;
   student.imagePath = path;
   student.email = email;
+  student.roles = roles;
 
   let result = await student.save();
   console.log("updated student: ", result);

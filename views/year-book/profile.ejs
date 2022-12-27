@@ -1,7 +1,7 @@
 <br>
-Name: <%= student.user.firstName %> <%= student.user.lastName %>
+<h4>Name</h4> <p><%= student.user.firstName %> <%= student.user.lastName %></p>
 <br>
-Email: <%= student.user.email %>
+<h4>Email</h4> <p><%= student.user.email %></p>
 <br>
 <% if(student.user.imagePath) { %>
     <img src="<%= student.user.imagePath %>" alt="<%= student.user.firstName %>" height = 300px />
@@ -14,6 +14,8 @@ Email: <%= student.user.email %>
     <% } %>
   </ul>
 <% } %>
+
+<br>
 
 <h4>Comments</h4>
     <% if(student.user.comments) { %>

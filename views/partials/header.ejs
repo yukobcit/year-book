@@ -1,19 +1,25 @@
 <header>
-    <h1><%= title %></h1>
+    <div id="page-title">
+        <%= title %>
+    </div>
+
     <nav id="main">
-        <a href="/">Home</a> | 
-        <a href="/about">About</a> 
+        <ul>
+
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
         
         <%if (reqInfo.authenticated) { %>
-            <a href="/year-book"> | Year Book</a>
-            <a href='/logout'>Logout</a>          
+            <li><a href="/year-book">Year Book</a></li>
+            <li><a href='/logout'>Logout</a></li>        
                 <% if(reqInfo.roles?.length) { %>
                         [<%= reqInfo.username %> -- <%= reqInfo.roles %>] 
                 <% } else { %>
                         [<%= reqInfo.username %>]<% } %>
         <% } else { %>
-            <a href='/login'> | Login</a> | 
-            <a href='/register'>Register</a> 
+            <li><a href='/login'>Login</a></li>
+            <li><a href='/register'>Register</a></li>
         <%}%>
+    </ul>
     </nav>
   </header>

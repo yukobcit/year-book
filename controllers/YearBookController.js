@@ -39,21 +39,22 @@ let roles = await _userOps.getRolesByUsername(reqInfo.username);
 let sessionData = req.session;
 sessionData.roles = roles;
 reqInfo.roles = roles;
+let pageStudentInfo ='';
 
-let userInfo = await _userOps.getStudentById(reqInfo.id);
-// get user by....
+// if is is not from login, check parameter for id
+const id = req.params.id;
+id ? pageStudentInfo = await _userOps.getStudentById(id) :  pageStudentInfo = await _userOps.getUserByUsername(reqInfo.username)
+
+// get all the atudents for side bar
 students = await _userOps.getAllStudents();
-console.log(userInfo.user.username);
-console.log(reqInfo.username);
-if (userInfo) {
+
+if (pageStudentInfo) {
   res.render("year-book/profile", {
-    title: "Year Book - " + userInfo.user.firstName,
-    student: userInfo,
+    title: "Year Book - " + pageStudentInfo.user.firstName,
+    student: pageStudentInfo,
     students: students,
     reqInfo: reqInfo,
     layout: "./layouts/side-bar",
-
-
   });
 } else {
   res.render("year-book/profile", {
@@ -69,21 +70,21 @@ if (userInfo) {
 exports.Edit = async function (req, res) {
   const id = req.params.id;
   let reqInfo = RequestService.reqHelper(req);
-  let userInfo = await _userOps.getStudentById(id);
-  let roles = await _userOps.getRolesByUsername(reqInfo.username);
+  let pageStudentInfo = await _userOps.getStudentById(id);
+  let pageStudentRoles = pageStudentInfo.user.roles;
+  let userRoles = await _userOps.getRolesByUsername(reqInfo.username);
   let managerCheck = '';
   let adminCheck = '';
+  pageStudentRoles.includes("Manager") ? managerCheck = "checked" : '';
+  pageStudentRoles.includes("Admin") ? adminCheck = "checked" : '';
 
-  roles.includes("Manager") ? managerCheck = "checked" : '';
-  roles.includes("Admin") ? adminCheck = "checked" : '';
-
-  if (reqInfo.id == id || roles.includes("Manager") || roles.includes("Admin")){
+  if (reqInfo.id == id || userRoles.includes("Manager") || userRoles.includes("Admin")){
     res.render("year-book/student-form", {
       title: "Edit Student Info",
       errorMessage: "",
       // username: username,
       id : id,
-      student: userInfo,
+      student: pageStudentInfo,
       reqInfo: reqInfo,
       managerCheck: managerCheck,
       adminCheck: adminCheck
@@ -96,7 +97,7 @@ exports.Edit = async function (req, res) {
     if (userInfo) {
       res.render("year-book/profile", {        
         title: "Year Book - Students",
-        student: userInfo,
+        student: pageStudentInfo,
         students: students,
         reqInfo: reqInfo,
         id : id,
@@ -202,7 +203,9 @@ exports.CommentStudent = async function (req, res) {
   let reqInfo = RequestService.reqHelper(req);
   const username = req.body.student_username;
   let authorInfo = await _userOps.getUserByUsername(reqInfo.username,);
+  let students = await _userOps.getAllStudents();
 
+  console.log(reqInfo);
   console.log("Saving a comment for ", username);
   const comment = {
     commentBody: req.body.comment,
@@ -213,25 +216,27 @@ exports.CommentStudent = async function (req, res) {
     username
   );
 
-  if (responseObj.errorMessage != "") {
+  if (responseObj.errorMessage == "") {
       res.render("year-book/profile", {
           title: "Year Book  -  " + responseObj.user.firstName,
           students: students,
           student: responseObj,
           username: responseObj.user.username,
-          
+          id: req.body.student_id,
           reqInfo: reqInfo,
           layout: "./layouts/side-bar",
         });
       }
   else{
       console.log("An error occured. Item not created.");
-      res.render("year-book/student-form", {
+      res.render("year-book/profile", {
         title: "Year Book  -  " + responseObj.user.firstName,
         students: students,
         student: responseObj,
+        id: req.body.student_id,
         username: responseObj.user.username,
         errorMessage: responseObj.errorMsg,
+        reqInfo: reqInfo,
       })
     }
 };

@@ -79,7 +79,6 @@ async updateStudentCommentByUsername(comment, username) {
     return response;
   }
 }
-
   async searchStudents(string) {
     const firstNameFilter = {firstName: {$regex: string, $options: "i"}};
     const lastNameFilter = {lastName: {$regex: string, $options: "i"}};

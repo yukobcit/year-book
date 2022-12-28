@@ -24,7 +24,6 @@ exports.RegisterUser = async function (req, res) {
   const passwordConfirm = req.body.passwordConfirm;
   console.log(req.body)
 
-
   if (password == passwordConfirm) {
     // Creates user object with mongoose model.
     // Note that the password is not present.
@@ -34,8 +33,6 @@ exports.RegisterUser = async function (req, res) {
       email: req.body.email,
       username: req.body.username,
     });
-
-    console.log(User);
     // Uses passport to register the user.
     // Pass in user object without password
     // and password as next parameter.
@@ -56,7 +53,7 @@ exports.RegisterUser = async function (req, res) {
         // User registered so authenticate and redirect to secure
         // area.
         passport.authenticate("local")(req, res, function () {
-          res.redirect("/year-book/profile");
+          res.redirect("/year-book/detail");
         });
       }
     );
@@ -68,10 +65,10 @@ exports.RegisterUser = async function (req, res) {
         lastName: req.body.lastName,
         email: req.body.email,
         username: req.body.username,
-        title: "Register "
       },
       errorMessage: "Passwords does not match.",
       reqInfo: reqInfo,
+      title: "Register"
     });
   }
 };
@@ -107,7 +104,6 @@ exports.Login = async function (req, res) {
     title: "Login"
   });
 };
-
 
 // Receives login information & redirects
 // depending on pass or fail.

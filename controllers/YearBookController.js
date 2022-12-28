@@ -1,18 +1,20 @@
 const User = require("../models/User");
 const UserOps = require("../data/UserOps");
+const _userOps = new UserOps();
 const passport = require("passport");
 const RequestService = require("../services/RequestService");
-const _userOps = new UserOps();
 const path = require("path");
 const dataPath = path.join(__dirname, "../public/");
+// const { isGeneratorFunction } = require("util/types");
 
 exports.Index = async function (req, res) {
-  console.log("loading students from controller");
 let students = []
 let reqInfo = RequestService.reqHelper(req);
+// search
 if(req.query.searchStudents){
   students = await _userOps.searchStudents(req.query.searchStudents);
 }
+// no search
 else{
   students = await _userOps.getAllStudents();
 }
@@ -31,106 +33,37 @@ else{
   }
 };
 
-exports.Profile = async function (req, res) {
-
-  let reqInfo = RequestService.reqHelper(req);
-  if (reqInfo.authenticated) {
-    let roles = await _userOps.getRolesByUsername(reqInfo.username);
-    let sessionData = req.session;
-    sessionData.roles = roles;
-    reqInfo.roles = roles;
-    
-    // let userInfo = await _userOps.getUserByUsername(reqInfo.username);
-    let userInfo = await _userOps.getStudentById(reqInfo.id);
-    // get user by....
-    students = await _userOps.getAllStudents();
-    // console.log(students)
-    if (userInfo) {
-      res.render("year-book/profile", {
-        title: "Year Book - " + userInfo.user.firstName,
-        student: userInfo,
-        students: students,
-        reqInfo: reqInfo,
-        layout: "./layouts/side-bar",
-      });
-    } else {
-      res.render("year-book/profile", {
-        title: "Year Book - Student",
-        student: [],
-        students: [],
-        reqInfo: reqInfo,
-
-        layout: "./layouts/side-bar",
-      });
-    }
-  } else {
-    res.redirect(
-      "/user/login?errorMessage=You must be logged in to view this page."
-    );
-  }
-};
-
-
-// Admin Area available to users who belong to Admin role
-exports.AdminArea = async function (req, res) {
-  let reqInfo = RequestService.reqHelper(req, ["Admin"]);
-  if (reqInfo.rolePermitted) {
-    res.render("user/admin-area", { errorMessage: "", reqInfo: reqInfo });
-  } else {
-    res.redirect(
-      "/user/login?errorMessage=You must be an admin to access this area."
-    );
-  }
-};
-
-// Manager Area available to users who belong to Admin and/or Manager role
-exports.ManagerArea = async function (req, res) {
-  let reqInfo = RequestService.reqHelper(req, ["Admin", "Manager"]);
-  if (reqInfo.rolePermitted) {
-    res.render("user/manager-area", { errorMessage: "", reqInfo: reqInfo });
-  } else {
-    res.redirect(
-      "/user/login?errorMessage=You must be a manager or admin to access this area."
-    );
-  }
-};
-
 exports.Detail = async function (req, res) {
-  const id = req.params.id;
-  console.log("year-book/username"+ id)
-  let reqInfo = RequestService.reqHelper(req);
+let reqInfo = RequestService.reqHelper(req);
+let roles = await _userOps.getRolesByUsername(reqInfo.username);
+let sessionData = req.session;
+sessionData.roles = roles;
+reqInfo.roles = roles;
 
-  if (reqInfo.authenticated) {
+let userInfo = await _userOps.getStudentById(reqInfo.id);
+// get user by....
+students = await _userOps.getAllStudents();
+console.log(userInfo.user.username);
+console.log(reqInfo.username);
+if (userInfo) {
+  res.render("year-book/profile", {
+    title: "Year Book - " + userInfo.user.firstName,
+    student: userInfo,
+    students: students,
+    reqInfo: reqInfo,
+    layout: "./layouts/side-bar",
 
-    // let userInfo = await _userOps.getUserByUsername(username);
-    let userInfo = await _userOps.getStudentById(id);
-    // get user by...
-    students = await _userOps.getAllStudents();
 
-    if (userInfo) {
-      res.render("year-book/profile", {        
-        title: "Year Book - " + userInfo.user.firstName,
-        student: userInfo,
-        students: students,
-        reqInfo: reqInfo,
-        username: userInfo.username,
-        layout: "./layouts/side-bar",
-      });
-    } else {
-      res.render("year-book/profile", {
-        title: "Year Book - Students",
-        student: [],
-        students: [],
-        reqInfo: reqInfo,
-
-        layout: "./layouts/side-bar",
-      });
-    }
-  } else {
-    res.redirect(
-      "/user/login?errorMessage=You must be logged in to view this page."
-    );
-  }
+  });
+} else {
+  res.render("year-book/profile", {
+    title: "Year Book - Student",
+    student: [],
+    students: [],
+    reqInfo: reqInfo,
+    layout: "./layouts/side-bar",
+  });
+}
 };
 
 exports.Edit = async function (req, res) {
@@ -141,12 +74,8 @@ exports.Edit = async function (req, res) {
   let managerCheck = '';
   let adminCheck = '';
 
-  if( userInfo.user.roles.includes("Manager")) {
-    managerCheck = "checked";
-  }
-  if( userInfo.user.roles.includes("Admin")) {
-    adminCheck = "checked";
-  }
+  roles.includes("Manager") ? managerCheck = "checked" : '';
+  roles.includes("Admin") ? adminCheck = "checked" : '';
 
   if (reqInfo.id == id || roles.includes("Manager") || roles.includes("Admin")){
     res.render("year-book/student-form", {
@@ -170,7 +99,6 @@ exports.Edit = async function (req, res) {
         student: userInfo,
         students: students,
         reqInfo: reqInfo,
-        // username: username,
         id : id,
         layout: "./layouts/side-bar",
       });
@@ -183,13 +111,20 @@ exports.EditStudent = async function (req, res) {
   const firstName = req.body.fname;
   const lastName = req.body.lname;
   const email = req.body.email;
-  const roles = [req.body.manager,req.body.admin];
+  let manager = req.body.manager;
+  let admin = req.body.admin;
+  let roles = [];
   let reqInfo = RequestService.reqHelper(req);
+  let userInfo = await _userOps.getStudentById(id);
 
+  if (manager != null){
+    roles.push(manager);
+  }
+  if(admin != null){
+    roles.push(admin);
+  }
 
   let path = "";
-  console.log("req")
-
 
   if(req.files != null)
   {
@@ -209,64 +144,61 @@ exports.EditStudent = async function (req, res) {
       students: students,
       reqInfo: reqInfo,
       username: responseObj.user.username,
-      
       layout: "./layouts/side-bar",
     });
   }
-
   else {
-    response.render("year-book/student-form", {
+    res.render("year-book/student-form", {
       title: "Edit Student Info",
-      student: studentObj,
-      students: students,
+      id : id,
+      student: userInfo,
+      reqInfo: reqInfo,
       username: responseObj.user.username,
       errorMessage: responseObj.errorMsg,
     });
   }
 };
+
 exports.DeleteStudentById = async function (req, res) {
   let reqInfo = RequestService.reqHelper(req);
   let roles = await _userOps.getRolesByUsername(reqInfo.username);
-  if (roles.includes("Admin")){
+  let students = await _userOps.getAllStudents();
+  if (!roles.includes("Admin")){
 
+    if (students) {
+      res.render("year-book/students", {
+        title: "Year Book - Students",
+        students: students,
+        reqInfo: reqInfo,
+      });
+    } else {
+      res.render("students", {
+        title: "Year Book - Students",
+        students: [],
+        reqInfo: reqInfo,
+      })
+    }
+    return;
+  }
   const studentId = req.params.id;
   let deletedStudent = await _userOps.deleteProfileById(studentId);
-  let students = await _userOps.getAllStudents();
+    if (deletedStudent) {
+      res.render("year-book/students", {
+        title: "Year Book",
+        students: students,
+        reqInfo: reqInfo,
+      });
+    } else {
+      res.render("year-book/students", {
+        title: "Year Book",
+        students: students,
+        reqInfo: reqInfo,
+        errorMessage: "Error.  Unable to Delete",
+      });
+    }
+  };
 
-  if (deletedStudent) {
-    res.render("year-book/students", {
-      title: "Year Book",
-      students: students,
-      reqInfo: reqInfo,
-    });
-  } else {
-    res.render("year-book/students", {
-      title: "Year Book",
-      students: students,
-      reqInfo: reqInfo,
-      errorMessage: "Error.  Unable to Delete",
-    });
-  }
-}else{
-  students = await _userOps.getAllStudents();
-
-  if (students) {
-    res.render("year-book/students", {
-      title: "Year Book - Students",
-      students: students,
-      reqInfo: reqInfo,
-    });
-  } else {
-    res.render("students", {
-      title: "Year Book - Students",
-      students: [],
-      reqInfo: reqInfo,
-    })
-   }
-  }
-};
 exports.CommentStudent = async function (req, res) {
-  
   let reqInfo = RequestService.reqHelper(req);
   const username = req.body.student_username;
   let authorInfo = await _userOps.getUserByUsername(reqInfo.username,);
@@ -281,7 +213,7 @@ exports.CommentStudent = async function (req, res) {
     username
   );
 
-  if (responseObj.errorMessage == "") {
+  if (responseObj.errorMessage != "") {
       res.render("year-book/profile", {
           title: "Year Book  -  " + responseObj.user.firstName,
           students: students,
@@ -303,3 +235,27 @@ exports.CommentStudent = async function (req, res) {
       })
     }
 };
+
+// // Admin Area available to users who belong to Admin role
+// exports.AdminArea = async function (req, res) {
+//   let reqInfo = RequestService.reqHelper(req, ["Admin"]);
+//   if (reqInfo.rolePermitted) {
+//     res.render("user/admin-area", { errorMessage: "", reqInfo: reqInfo });
+//   } else {
+//     res.redirect(
+//       "/user/login?errorMessage=You must be an admin to access this area."
+//     );
+//   }
+// };
+
+// // Manager Area available to users who belong to Admin and/or Manager role
+// exports.ManagerArea = async function (req, res) {
+//   let reqInfo = RequestService.reqHelper(req, ["Admin", "Manager"]);
+//   if (reqInfo.rolePermitted) {
+//     res.render("user/manager-area", { errorMessage: "", reqInfo: reqInfo });
+//   } else {
+//     res.redirect(
+//       "/user/login?errorMessage=You must be a manager or admin to access this area."
+//     );
+//   }
+// };

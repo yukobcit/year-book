@@ -113,8 +113,9 @@ exports.Login = async function (req, res) {
 // depending on pass or fail.
 
 exports.LoginUser = async (req, res, next) => {
+
   passport.authenticate("local", {
-    successRedirect: "/year-book/profile",
+    successRedirect: "/year-book/detail",
     failureRedirect: "/login?errorMessage=Invalid login.",
   })(req, res, next);
 };

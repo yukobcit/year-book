@@ -79,18 +79,18 @@ async updateStudentCommentByUsername(comment, username) {
     return response;
   }
 }
-  async searchStudents(string) {
-    const firstNameFilter = {firstName: {$regex: string, $options: "i"}};
-    const lastNameFilter = {lastName: {$regex: string, $options: "i"}};
-    let students = await User.find({$or: [firstNameFilter,lastNameFilter]}).sort({ lastName: 1 });
-    return students;
-  }
+async searchStudents(string) {
+  const firstNameFilter = {firstName: {$regex: string, $options: "i"}};
+  const lastNameFilter = {lastName: {$regex: string, $options: "i"}};
+  let students = await User.find({$or: [firstNameFilter,lastNameFilter]}).sort({ lastName: 1 });
+  return students;
+}
 
-   async deleteProfileById(id) {
-    console.log(`deleting student by id`);
-    let result = await User.findByIdAndDelete(id);
-    console.log(result);
-    return result;
-  }
+  async deleteProfileById(id) {
+  console.log(`deleting student by id`);
+  let result = await User.findByIdAndDelete(id);
+  console.log(result);
+  return result;
+}
 }
 module.exports = UserOps;

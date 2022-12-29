@@ -18,8 +18,20 @@
     <input id="interests" name="interests" type="text" 
                 value="<%= student.user.interests ? student.user.interests : '' %>" >
     <br>
-    <input id="photo" name="photo" type="file">
     <br>
+
+    <% if(student.user.imagePath) { %>
+        <img src="<%= student.user.imagePath %>" alt="<%= student.user.firstName %>_current photo" height = 300px />
+        <input type="checkbox" id="photoDelete" name="photoDelete" value="Delete">
+        <label for="photo_delete">Delete Current Photo</label><br>
+    <% } %>
+
+
+
+    <br>
+    <label for="photo">Update Your Picture</label><br>
+    <input id="photo" name="photo" type="file">    <br>
+
     <br>
    <% if(reqInfo.roles.includes("Admin") || reqInfo.roles.includes("Manager"))  { %>
          <input type="checkbox" id="manager" name="manager" value="Manager"  <%= managerCheck%>>
@@ -30,6 +42,5 @@
     <% } %>
     <button type="submit" value="Submit">Submit</button>
 </form>
-
 
 <%= errorMessage %>

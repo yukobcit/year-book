@@ -114,6 +114,7 @@ exports.EditStudent = async function (req, res) {
   const email = req.body.email;
   let manager = req.body.manager;
   let admin = req.body.admin;
+  let photoDelete = req.body.photoDelete;
   let roles = [];
   let reqInfo = RequestService.reqHelper(req);
   let userInfo = await _userOps.getStudentById(id);
@@ -132,6 +133,8 @@ exports.EditStudent = async function (req, res) {
     path = dataPath+"/images/"+req.files.photo.name
     req.files.photo.mv(path) 
     path = "/images/"+req.files.photo.name
+  }else if(photoDelete){
+    paht = ''
   }
   let studentInterests = req.body.interests.split(",")
   let responseObj = await _userOps.updateStudentById(id, firstName,lastName,studentInterests,path,email,roles);
@@ -164,6 +167,7 @@ exports.DeleteStudentById = async function (req, res) {
   let reqInfo = RequestService.reqHelper(req);
   let roles = await _userOps.getRolesByUsername(reqInfo.username);
   let students = await _userOps.getAllStudents();
+  // if it is not admin, not allowed to delete 
   if (!roles.includes("Admin")){
 
     if (students) {
@@ -173,7 +177,7 @@ exports.DeleteStudentById = async function (req, res) {
         reqInfo: reqInfo,
       });
     } else {
-      res.render("students", {
+      res.render("year-book/students", {
         title: "Year Book - Students",
         students: [],
         reqInfo: reqInfo,

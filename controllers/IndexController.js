@@ -1,6 +1,8 @@
 const RequestService = require("../services/RequestService");
 const passport = require("passport");
 const User = require("../models/User");
+const path = require("path");
+const dataPath = path.join(__dirname, "../public/");
 
 exports.Index = async function (req, res) {
   console.log("Index-controller")
@@ -23,6 +25,14 @@ exports.RegisterUser = async function (req, res) {
   const password = req.body.password;
   const passwordConfirm = req.body.passwordConfirm;
   console.log(req.body)
+  let path = "";
+  if(req.files != null)
+  {
+    path = dataPath+"/images/"+req.files.photo.name
+    req.files.photo.mv(path) 
+    path = "/images/"+req.files.photo.name
+  }
+  let studentInterests = req.body.interests.split(",")
 
   if (password == passwordConfirm) {
     // Creates user object with mongoose model.
@@ -32,6 +42,8 @@ exports.RegisterUser = async function (req, res) {
       lastName: req.body.lastName,
       email: req.body.email,
       username: req.body.username,
+      interests: studentInterests,
+      imagePath: path
     });
     // Uses passport to register the user.
     // Pass in user object without password

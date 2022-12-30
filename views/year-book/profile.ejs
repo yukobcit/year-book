@@ -31,7 +31,7 @@
   <form action="/year-book/comment/<%= student.user.username %>" method="POST" > 
       <input type="hidden" id="student_username" name="student_username" value="<%= student.user.username %>">
       <label for="name"></label>
-      <input id="comment" name="comment" placeholder= "Please leave your comment" type="text" >
+      <input id="comment" name="comment" placeholder= "Please leave your comment" type="text" rows="3">
       <button type="submit" value="Submit">Submit</button>
   </form>
   <% } %>

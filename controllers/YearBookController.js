@@ -126,7 +126,7 @@ exports.EditStudent = async function (req, res) {
     roles.push(admin);
   }
 
-  let path = "";
+  let path = userInfo.user.imagePath;
 
   if(req.files != null)
   {
@@ -134,7 +134,8 @@ exports.EditStudent = async function (req, res) {
     req.files.photo.mv(path) 
     path = "/images/"+req.files.photo.name
   }else if(photoDelete){
-    paht = ''
+    console.log('delete');
+    path = ''
   }
   let studentInterests = req.body.interests.split(",")
   let responseObj = await _userOps.updateStudentById(id, firstName,lastName,studentInterests,path,email,roles);
@@ -210,8 +211,8 @@ exports.CommentStudent = async function (req, res) {
   const username = req.body.student_username;
   let authorInfo = await _userOps.getUserByUsername(reqInfo.username,);
   let students = await _userOps.getAllStudents();
+  let student = await _userOps.getUserByUsername(username);
 
-  console.log(reqInfo);
   console.log("Saving a comment for ", username);
   const comment = {
     commentBody: req.body.comment,
@@ -222,29 +223,10 @@ exports.CommentStudent = async function (req, res) {
     username
   );
 
-  if (responseObj.errorMessage == "") {
-      res.render("year-book/profile", {
-          title: "Year Book  -  " + responseObj.user.firstName,
-          students: students,
-          student: responseObj,
-          username: responseObj.user.username,
-          id: req.body.student_id,
-          reqInfo: reqInfo,
-          layout: "./layouts/side-bar",
-        });
+  if (responseObj.errorMessage != "") {
+      console.log("An error occured. Item not created.")
       }
-  else{
-      console.log("An error occured. Item not created.");
-      res.render("year-book/profile", {
-        title: "Year Book  -  " + responseObj.user.firstName,
-        students: students,
-        student: responseObj,
-        id: req.body.student_id,
-        username: responseObj.user.username,
-        errorMessage: responseObj.errorMsg,
-        reqInfo: reqInfo,
-      })
-    }
+  res.redirect("/year-book/" + student.user.id)
 };
 
 // // Admin Area available to users who belong to Admin role

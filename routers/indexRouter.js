@@ -13,5 +13,4 @@ indexRouter.post("/login", IndexController.LoginUser);
 
 indexRouter.get("/logout", IndexController.Logout);
 
-
 module.exports = indexRouter;

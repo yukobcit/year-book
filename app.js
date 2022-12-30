@@ -99,7 +99,10 @@ app.use(AuthUser)
 const yearBookRouter = require("./routers/yearBookRouter");
 app.use("/year-book", yearBookRouter);
 
-
+// catch any unmatched routes
+app.use("/*", (req, res) => {
+  res.status(404).send("File Not Found");
+});
 
 // Start listening
 const port = process.env.PORT || 3003;

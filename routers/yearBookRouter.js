@@ -10,6 +10,7 @@ yearBookRouter.get("/edit/:id", YearBookController.Edit);
 yearBookRouter.post("/edit/:id",YearBookController.EditStudent);
 
 yearBookRouter.post("/comment/:id",YearBookController.CommentStudent);
+yearBookRouter.get("/comment/:id",YearBookController.Detail);
 yearBookRouter.get("/delete/:id", YearBookController.DeleteStudentById);
 
 yearBookRouter.get("/:id", YearBookController.Detail);

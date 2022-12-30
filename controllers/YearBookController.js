@@ -175,7 +175,8 @@ exports.DeleteStudentById = async function (req, res) {
         title: "Year Book - Students",
         students: students,
         reqInfo: reqInfo,
-      });
+      }
+      );
     } else {
       res.render("year-book/students", {
         title: "Year Book - Students",
@@ -187,6 +188,7 @@ exports.DeleteStudentById = async function (req, res) {
   }
   const studentId = req.params.id;
   let deletedStudent = await _userOps.deleteProfileById(studentId);
+  students = await _userOps.getAllStudents();
     if (deletedStudent) {
       res.render("year-book/students", {
         title: "Year Book",
